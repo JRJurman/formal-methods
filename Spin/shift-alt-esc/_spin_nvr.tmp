@@ -1,0 +1,50 @@
+never Safety {    /* !(((<> ([] ((orders[0].food==server_got[0])))) && ((orders[1].food==server_got[1]))) && ((orders[2].food==server_got[2]))) */
+T0_init:
+	if
+	:: (! (((orders[0].food==server_got[0])))) -> goto accept_S11
+	:: (1) -> goto T0_S11
+	:: (((! (((orders[1].food==server_got[1])))) || (! (((orders[2].food==server_got[2])))))) -> goto accept_all
+	fi;
+accept_S11:
+	if
+	:: (1) -> goto T0_S11
+	fi;
+T0_S11:
+	if
+	:: (! (((orders[0].food==server_got[0])))) -> goto accept_S11
+	:: (1) -> goto T0_S11
+	fi;
+accept_all:
+	skip
+}
+never Safety2 {    /* !(1) */
+accept_init:
+T0_init:
+	if
+	:: (! ((1))) -> goto accept_all
+	fi;
+accept_all:
+	skip
+}
+never Liveness {    /* !([] ((((! (wants_order[0])) || (<> (places_order[0]))) && ((! (wants_order[0])) || (<> (places_order[0])))) && ((! (wants_order[0])) || (<> (places_order[0]))))) */
+T0_init:
+	if
+	:: (! ((! (wants_order[0]))) && ! ((places_order[0]))) -> goto accept_S4
+	:: (1) -> goto T0_init
+	fi;
+accept_S4:
+	if
+	:: (! ((places_order[0]))) -> goto accept_S4
+	fi;
+}
+never Liveness2 {    /* !([] (<> (server_busy))) */
+T0_init:
+	if
+	:: (! ((server_busy))) -> goto accept_S4
+	:: (1) -> goto T0_init
+	fi;
+accept_S4:
+	if
+	:: (! ((server_busy))) -> goto accept_S4
+	fi;
+}
